@@ -100,10 +100,10 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
           }
 
           {/* Returns & Orders */}
-          <div className="hidden lg:flex flex-col px-2 border border-transparent hover:border-white rounded-sm cursor-pointer">
+          <Link href="/orders" className="hidden lg:flex flex-col px-2 border border-transparent hover:border-white rounded-sm cursor-pointer">
             <span className="text-xs text-gray-300 leading-tight">Returns</span>
             <span className="text-sm font-bold leading-tight">& Orders</span>
-          </div>
+          </Link>
 
           {/* Cart - Desktop */}
           <Link

@@ -1,5 +1,5 @@
 "use client";
-import { IBrand } from "@/interfaces/common/IBrand";
+import { IBrand } from "@/interfaces/IBrand";
 import { ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {  useState } from "react";

@@ -1,5 +1,5 @@
 "use client"
-import { IBrand } from "@/interfaces/common/IBrand";
+import { IBrand } from "@/interfaces/IBrand";
 import { ICategory } from "@/interfaces/ICategory";
 import { apiClient } from "@/lib/api-client";
 import { Menu, ChevronRight } from "lucide-react";

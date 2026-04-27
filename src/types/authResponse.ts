@@ -1,4 +1,4 @@
-export type signInResponse={
+export type authResponse={
   message: string,
   user: {
     name: string,

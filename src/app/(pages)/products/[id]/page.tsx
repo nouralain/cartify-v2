@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Star, StarHalf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiClient } from "@/lib/api-client";
+import WishlistButton from "@/components/wishlist/WishlistButton";
 
 export default async function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -30,6 +31,8 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
               fill
               className="object-cover mix-blend-multiply drop-shadow-md"
             />
+                   <WishlistButton prodId={_id}/>
+            
           </div>
         </div>
 

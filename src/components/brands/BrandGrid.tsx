@@ -1,4 +1,4 @@
-import { IBrand } from '@/interfaces/common/IBrand'
+import { IBrand } from '@/interfaces/IBrand'
 import Image from 'next/image'
 import Link from 'next/link'
 

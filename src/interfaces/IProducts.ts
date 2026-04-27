@@ -1,5 +1,5 @@
-import { IBrand } from "./common/IBrand";
-import { ISubcategory } from "./common/ISubcategory";
+import { IBrand } from "./IBrand";
+import { ISubcategory } from "./ISubcategory";
 import { ICategory } from "./ICategory";
 
 export interface IProduct {

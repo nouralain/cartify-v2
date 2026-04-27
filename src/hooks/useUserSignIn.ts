@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import z from "zod"
  
  export default function useUserSignIn() {
     const [isLoading , setIsLoading]=useState(false)
@@ -12,8 +13,9 @@ const router=useRouter()
     defaultValues:{email:"" , password:""},
     resolver:zodResolver(userSignIn)
   })
+type UserSignInData = z.infer<typeof userSignIn>
 
-  const  userData = async(data:any) => {
+  const  userData = async(data:UserSignInData) => {
     setIsLoading(true)
 const response = await signIn("credentials",{
   email:data.email,
