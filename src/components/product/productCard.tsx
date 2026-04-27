@@ -4,6 +4,7 @@ import {Star, StarHalf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IProduct } from "@/interfaces/IProducts";
 import WishlistButton from "../wishlist/WishlistButton";
+import AddToCartBtn from './AddToCartBtn';
 
 
 export function ProductCard({ product }: { product: IProduct }) {
@@ -70,10 +71,11 @@ export function ProductCard({ product }: { product: IProduct }) {
             <p>Or fastest delivery <strong>Today</strong></p>
           </div>
         </div>
-        
-        <Button className="w-full mt-3 bg-[#FFD814] hover:bg-[#F7CA00] text-black rounded-full border-0 shadow-none font-medium text-sm">
+        <AddToCartBtn prodId={_id} className={"w-full mt-3 bg-[#FFD814] hover:bg-[#F7CA00] text-black rounded-full border-0 shadow-none font-medium text-sm"}>
           Add to cart
-        </Button>
+
+        </AddToCartBtn>
+       
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ import { getWishListProd } from "@/redux/slices/wishlistProductsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,10 +13,7 @@ const router = useRouter();
     const isAdded=wishListProd?.some((item)=>item._id === prodId)
 
   const dispatch = useDispatch<AppDispatch>()
-  useEffect(()=>{
-    dispatch(getWishListProd(session.data?.user.token!))
-  },[session.data?.user?.token, dispatch])
-
+ 
   async function handleWishList() {
     if (session.status === "unauthenticated") {
       router.push("/auth/login");

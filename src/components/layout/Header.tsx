@@ -12,6 +12,12 @@ import { ICategory } from "@/interfaces/ICategory";
 import SearchBar from "./SearchBar";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { getCartCounter } from "@/redux/slices/cartCounter";
+import { getWishListProd } from "@/redux/slices/wishlistProductsSlice";
+import { Spinner } from "../ui/spinner";
+import { getCartData } from "@/redux/slices/cartData";
 export function Header({categories}:{categories:IResponse<ICategory[]>}) {
   const [openPoppers, setOpenPoppers] = useState(false);
 
@@ -21,7 +27,18 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
     setOpenPoppers(false);
   }, [pathname]);
 
+  const {cartData,loading} = useSelector((state:RootState)=>state.cartDataRed)
+  
+  const dispatch = useDispatch <AppDispatch>()
   const session = useSession()
+  const token = session.data?.user.token
+   useEffect(()=>{
+    if(token){
+      dispatch(getWishListProd(token))
+       dispatch(getCartData(token))
+    }
+  },[token, dispatch])
+
 
   return (
     <>
@@ -112,7 +129,10 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
           >
             <div className="relative">
               <span className="absolute -top-2 left-3 font-bold text-[#ff9900]">
-                0
+                {loading?
+                <Spinner/>
+                :cartData?.numOfCartItems
+                }
               </span>
               <ShoppingCart className="h-8 w-8" />
             </div>

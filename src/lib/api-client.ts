@@ -5,6 +5,8 @@ import IProductParam from "@/interfaces/IProductParams";
 import { IProduct } from "@/interfaces/IProducts";
 import { IResponse } from "@/interfaces/IResponse";
 import { IWishListProducts } from "@/interfaces/IWishListProducts";
+import { ICartResponse } from "@/interfaces/ICartResponse";
+import { ICartData } from "@/interfaces/ICartData";
 
 class ApiClient {
   #baseUrl: string = process.env.NEXT_PUBLIC_BASE_URL!;
@@ -126,6 +128,71 @@ class ApiClient {
      const data = await resp.json();
     return data;
   }
+
+
+
+  async addProdToCart(productId: string, token: string):Promise<ICartResponse<ICartData>> {
+    const response = await fetch(`${this.#baseUrl}/api/v2/cart`, {
+      method: "POST",
+      body: JSON.stringify({
+        productId,
+      }),
+      headers: {
+        ...this.#headers,
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+
+   async getCartProd(token: string):Promise<ICartResponse<ICartData>> {
+    const response = await fetch(`${this.#baseUrl}/api/v2/cart`, {
+      headers: {
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async removeProdFromCart(id:string,token: string):Promise<ICartResponse<ICartData>> {
+    const resp = await fetch(`${this.#baseUrl}/api/v2/cart/${id}`,{
+      method:"DELETE",
+       headers: {
+        token,
+      },
+    })
+     const data = await resp.json();
+    return data;
+  }
+
+  async updateProdCount(id:string,token: string,count:number):Promise<ICartResponse<ICartData>>{
+    const response = await fetch(`${this.#baseUrl}/api/v2/cart/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+       count,
+      }),
+      headers: {
+        ...this.#headers,
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async deleteAllProdFromCart(token: string):Promise<ICartResponse<ICartData>> {
+    const resp = await fetch(`${this.#baseUrl}/api/v2/cart`,{
+      method:"DELETE",
+       headers: {
+        token,
+      },
+    })
+     const data = await resp.json();
+    return data;
+  }
+
 }
 
 export const apiClient = new ApiClient();
