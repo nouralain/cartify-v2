@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { getCartData } from "@/redux/slices/cartData";
 import LoadingComponent from "@/components/LoadingComponent";
 import DeleteAllProd from "@/components/cart/DeleteAllProd";
+import { redirect } from "next/navigation";
 
 export default  function CartPage() {
 const session = useSession()
@@ -25,8 +26,8 @@ const token = session?.data?.user.token;
     }
   },[token, dispatch])
 
-  // if no data yet
-  if (!cartData) {
+  // if no data yet and user logged in
+  if (!cartData && session.status==="authenticated") {
     return <LoadingComponent />;
   }
   const products = cartData?.data?.products || [];
@@ -109,7 +110,7 @@ const token = session?.data?.user.token;
             </div>
             
 
-            <Button className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-[#0f1111] rounded-full border border-[#FCD200]/50 font-medium h-9">
+            <Button onClick={()=>redirect("/payment")} className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-[#0f1111] rounded-full border border-[#FCD200]/50 font-medium h-9">
               Proceed to checkout
             </Button>
           </div>
