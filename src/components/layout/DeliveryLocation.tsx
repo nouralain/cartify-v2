@@ -3,9 +3,11 @@ import { governorates } from "@/lib/constants/governorates"
 import Link from "next/link"
 import { useState } from "react"
 import { Button } from "../ui/button"
+import { useSession } from "next-auth/react"
 export default function DeliveryLocationPopover({ onClose }: { onClose: () => void }) {
   const [selectedGovernorate, setSelectedGovernorate] = useState("")
-
+const session = useSession()
+const token = session.data?.user.token
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="w-80 rounded-lg shadow-lg bg-white ">
@@ -30,24 +32,8 @@ export default function DeliveryLocationPopover({ onClose }: { onClose: () => vo
         </p>
 
         {/* Sign in button */}
-        <Button 
-  asChild 
-  className="w-full bg-[#E8622A] hover:bg-[#d4561f] text-white"
->
-  <Link href="/register">
-    Sign in to see your addresses
-  </Link>
-</Button>
-
-        {/* Divider */}
-        <div className="flex items-center gap-2">
-          <div className="flex-1 border-t border-gray-200" />
-          <span className="text-xs text-gray-400">or</span>
-          <div className="flex-1 border-t border-gray-200" />
-        </div>
-
-        {/* Governorate selector */}
-        <select
+        {token ?
+             <select
           value={selectedGovernorate}
           onChange={(e) => setSelectedGovernorate(e.target.value)}
           className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#E8622A]"
@@ -58,7 +44,18 @@ export default function DeliveryLocationPopover({ onClose }: { onClose: () => vo
               {gov.label}
             </option>
           ))}
-        </select>
+        </select>:
+        <Button 
+  asChild 
+  className="w-full bg-[#E8622A] hover:bg-[#d4561f] text-white"
+>
+  <Link href="/auth/register">
+    Sign in to see your addresses
+  </Link>
+</Button>}
+
+      
+   
       </div>
     </div>
     </div>

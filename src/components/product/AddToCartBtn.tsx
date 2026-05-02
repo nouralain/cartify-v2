@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { AppDispatch} from "@/redux/store";
 import { getCartData } from '@/redux/slices/cartData';
+import { redirect } from 'next/navigation';
 interface Props {
   className?: string
   children: React.ReactNode
@@ -18,14 +19,19 @@ export default function AddToCartBtn({className , children,prodId}:Props) {
     const [isLoading , setIsLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
    async function handleAddToCart(){
-    setIsLoading(true)
-        const response = await apiClient.addProdToCart(prodId,token!)
-        if(response.status==="success"){
-          setIsLoading(false)
-                 dispatch(getCartData(token!))
-          
-          toast.success(response.message)
-        }
+    if(token){
+
+      setIsLoading(true)
+          const response = await apiClient.addProdToCart(prodId,token!)
+          if(response.status==="success"){
+            setIsLoading(false)
+                   dispatch(getCartData(token!))
+            
+            toast.success(response.message)
+          }
+    }else{
+      redirect("/auth/login")
+    }
         
     }
   return (

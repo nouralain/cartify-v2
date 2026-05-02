@@ -4,6 +4,7 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import useUserSignIn from '@/hooks/useUserSignIn'
+import Link from 'next/link'
 
 export default function LoginPage() {
  const {isLoading,userData,handleSubmit,register,errors} = useUserSignIn()
@@ -41,6 +42,13 @@ export default function LoginPage() {
 
       </FieldGroup>
     </FieldSet>
+
+<p className="text-sm">
+            New customer?{" "}
+            <Link href="/auth/register" className="text-primary hover:underline">
+              Sign up instead
+            </Link>
+          </p>
 
       <p className="text-xs text-muted-foreground">
         By continuing, you agree to our{" "}

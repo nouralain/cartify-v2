@@ -3,11 +3,13 @@ import { IBrand } from "@/interfaces/IBrand";
 import { ICategory } from "@/interfaces/ICategory";
 import { apiClient } from "@/lib/api-client";
 import { Menu, ChevronRight } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export  function CategoryDropdown() {
-  
+  const session = useSession()
+  const token = session.data?.user.token
 const [categories,setCategories] = useState<ICategory[]>([])
 const [brands,setBrands] = useState<IBrand[]>([])
   
@@ -38,7 +40,7 @@ const [brands,setBrands] = useState<IBrand[]>([])
               <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
             </svg>
           </div>
-          <span className="text-xl font-bold tracking-tight">Hello, sign in</span>
+          <span className="text-xl font-bold tracking-tight">Hello, {token?session.data?.user.name:<Link href={"/auth/register"}>Sign in</Link>}</span>
         </div>
         
         <div className="grow overflow-y-auto pb-4">
