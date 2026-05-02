@@ -7,6 +7,7 @@ import { IResponse } from "@/interfaces/IResponse";
 import { IWishListProducts } from "@/interfaces/IWishListProducts";
 import { ICartResponse } from "@/interfaces/ICartResponse";
 import { ICartData } from "@/interfaces/ICartData";
+import { IAddress } from "@/interfaces/IAddress";
 
 class ApiClient {
   #baseUrl: string = process.env.NEXT_PUBLIC_BASE_URL!;
@@ -193,6 +194,38 @@ class ApiClient {
     return data;
   }
 
+   async sendUserAddress(
+     name: string,
+    details: string,
+    phone: string,
+    city: string,
+    token: string):Promise<IResponse<IAddress[]>> {
+    const response = await fetch(`${this.#baseUrl}/api/v1/addresses`, {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        details,
+        phone,
+        city
+      }),
+      headers: {
+        ...this.#headers,
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async getUserAddress(token: string):Promise<IResponse<IAddress[]>> {
+    const response = await fetch(`${this.#baseUrl}/api/v1/addresses`, {
+      headers: {
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
 }
 
 export const apiClient = new ApiClient();

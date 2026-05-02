@@ -6,7 +6,6 @@ import logo from "../../../public/Gemini_Generated_Image_smrgtbsmrgtbsmrg (1)(1)
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import DeliveryLocationPopover from "./DeliveryLocation";
-import { usePathname} from "next/navigation";
 import { IResponse } from '@/interfaces/IResponse';
 import { ICategory } from "@/interfaces/ICategory";
 import SearchBar from "./SearchBar";
@@ -14,31 +13,30 @@ import { signOut, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { getCartCounter } from "@/redux/slices/cartCounter";
 import { getWishListProd } from "@/redux/slices/wishlistProductsSlice";
 import { Spinner } from "../ui/spinner";
 import { getCartData } from "@/redux/slices/cartData";
+import { getUserAddress } from "@/redux/slices/userAddress";
+
 export function Header({categories}:{categories:IResponse<ICategory[]>}) {
   const [openPoppers, setOpenPoppers] = useState(false);
-
-  // when url changes close poppers -> fix unclosing popper when return back to home
-  const pathname = usePathname();
-  useEffect(() => {
-    setOpenPoppers(false);
-  }, [pathname]);
-
   const {cartData,loading} = useSelector((state:RootState)=>state.cartDataRed)
+  const {userAddress} = useSelector((state:RootState)=>state.addressRed)
   
   const dispatch = useDispatch <AppDispatch>()
   const session = useSession()
   const token = session.data?.user.token
+
    useEffect(()=>{
     if(token){
       dispatch(getWishListProd(token))
        dispatch(getCartData(token))
+       dispatch(getUserAddress(token))
+       
     }
   },[token, dispatch])
 
+ 
 
   return (
     <>
@@ -94,7 +92,7 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
                 Deliver to
               </span>
               <span className="text-sm font-bold leading-tight">
-                Your Address
+                {userAddress}
               </span>
             </div>
           </button>
