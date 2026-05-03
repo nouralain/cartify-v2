@@ -74,7 +74,10 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
                 className="flex items-center px-2 border border-transparent rounded-sm relative"
               >
                 <span className="absolute -top-1 left-4 font-bold text-[#ff9900]">
-                  0
+                  {loading?
+                <Spinner/>
+                :cartData?.numOfCartItems
+                }
                 </span>
                 <ShoppingCart className="h-6 w-6" />
               </Link>

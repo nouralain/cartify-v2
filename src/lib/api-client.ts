@@ -8,6 +8,7 @@ import { IWishListProducts } from "@/interfaces/IWishListProducts";
 import { ICartResponse } from "@/interfaces/ICartResponse";
 import { ICartData } from "@/interfaces/ICartData";
 import { IAddress } from "@/interfaces/IAddress";
+import { IOrderResponse } from "@/interfaces/orders/IOrderResponse";
 
 class ApiClient {
   #baseUrl: string = process.env.NEXT_PUBLIC_BASE_URL!;
@@ -226,6 +227,33 @@ class ApiClient {
     const data = await response.json();
     return data;
   }
+
+   async placeOrder(
+    postalCode:string,
+    details: string,
+    phone: string,
+    city: string,
+    token: string,
+    cartId:string):Promise<IOrderResponse> {
+    const response = await fetch(`${this.#baseUrl}/api/v2/orders/${cartId}`, {
+      method: "POST",
+      body: JSON.stringify({
+       "shippingAddress": {
+        details,
+        phone,
+        city,
+        postalCode,
+       }
+      }),
+      headers: {
+        ...this.#headers,
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+
 }
 
 export const apiClient = new ApiClient();

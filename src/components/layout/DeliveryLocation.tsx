@@ -17,7 +17,7 @@ const {handleAddressForm,handleSubmit,register,errors,isLoading,control} = useLo
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="w-80 rounded-lg shadow-lg bg-white">
+      <div className="w-120 rounded-lg shadow-lg bg-white">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h4 className="font-semibold text-sm">

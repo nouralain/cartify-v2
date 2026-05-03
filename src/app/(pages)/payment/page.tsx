@@ -1,9 +1,20 @@
 import Link from 'next/link';
 
-import { Button } from "@/components/ui/button";
+import CheckoutBtn from '@/components/payment/CheckoutBtn';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { apiClient } from '@/lib/api-client';
+import AddressDetails from '@/components/payment/AddressDetails';
+import Image from 'next/image';
 
 export default async function PaymentPage() {
- 
+ const session =await getServerSession(authOptions)
+ const token = session?.user.token
+const userCart= await apiClient.getCartProd(token!)
+const {cartId ,numOfCartItems} = userCart
+const {totalCartPrice,products  } = userCart.data
+ const userAddress = await apiClient.getUserAddress(token!)
+ const {details,phone,city} = userAddress.data[userAddress.data.length-1]
   return (
     <div className="bg-white min-h-screen font-sans">
       {/* Checkout Header */}
@@ -13,7 +24,7 @@ export default async function PaymentPage() {
             <h1 className="text-2xl font-bold text-amazon-blue">Cartify</h1>
           </Link>
           <h2 className="text-xl md:text-2xl text-[#0f1111] font-normal">
-            Checkout <span className="text-amazon-blue">( items)</span>
+            Checkout <span className="text-amazon-blue">({numOfCartItems} items)</span>
           </h2>
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -28,18 +39,10 @@ export default async function PaymentPage() {
         <div className="grow md:w-2/3">
           
           {/* Section 1: Shipping Address */}
-          <div className="mb-6">
-            <h3 className="text-lg md:text-xl font-bold text-[#0f1111] mb-2">1  Shipping address</h3>
-            <div className="border border-gray-200 rounded p-4 pl-12 bg-gray-50 text-sm flex justify-between">
-              <div>
-                <p className="font-bold text-[#0f1111]">{ "Customer"}</p>
-                <p className="text-[#0f1111]">123 Example Street, Apt 4B</p>
-                <p className="text-[#0f1111]">Cairo, Egypt 11511</p>
-              </div>
-              <button className="text-amazon-blue hover:text-[#c45500] hover:underline font-medium h-fit">Change</button>
-            </div>
-          </div>
-
+          {userAddress.data.length>0?
+<AddressDetails/>:
+ ""
+        }
           <hr className="border-gray-200 my-4" />
 
           {/* Section 2: Payment Method */}
@@ -47,37 +50,15 @@ export default async function PaymentPage() {
             <h3 className="text-lg md:text-xl font-bold text-[#e47911] mb-4">2  Payment method</h3>
             <div className="border border-gray-200 shadow-sm rounded">
               
-              <div className="p-4 border-b border-gray-200 bg-[#fcedd4] rounded-t flex items-center justify-between">
+              <div className="p-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <input type="radio" name="payment" id="credit" className="text-[#e47911] focus:ring-[#e47911]" defaultChecked />
                   <label htmlFor="credit" className="font-bold">Credit or debit cards</label>
-                  {/* <Image src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" width={30} height={10} className="object-contain" />
-                  <Image src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" width={25} height={15} className="object-contain" /> */}
+                  <Image src="/Visa.svg" alt="Visa" width={30} height={10} className="object-contain" />
+                  <Image src="/Mastercard-logo.svg" alt="Mastercard" width={25} height={15} className="object-contain" />
                 </div>
               </div>
 
-              <div className="p-4 bg-white flex flex-col gap-4">
-                <div className="flex flex-col gap-2 max-w-sm">
-                  <label className="text-sm font-bold">Card number</label>
-                  <input type="text" placeholder="XXXX XXXX XXXX XXXX" className="border border-gray-300 rounded px-3 py-1.5 focus:border-[#e47911] outline-none shadow-sm " />
-                </div>
-                <div className="flex gap-4 max-w-sm">
-                   <div className="flex flex-col gap-2 w-1/2">
-                    <label className="text-sm font-bold">Expiration date</label>
-                    <div className="flex gap-2">
-                      <select className="border border-gray-300 rounded px-2 py-1.5 focus:border-[#e47911] outline-none shadow-sm  w-full bg-white"><option>01</option></select>
-                      <select className="border border-gray-300 rounded px-2 py-1.5 focus:border-[#e47911] outline-none shadow-sm  w-full bg-white"><option>2026</option></select>
-                    </div>
-                   </div>
-                   <div className="flex flex-col gap-2 w-1/2">
-                    <label className="text-sm font-bold">CVV</label>
-                    <input type="text" placeholder="123" className="border border-gray-300 rounded px-3 py-1.5 focus:border-[#e47911] outline-none shadow-sm " />
-                   </div>
-                </div>
-                <div>
-                   <button className="bg-white hover:bg-gray-50 border border-gray-300 shadow-sm rounded-lg px-4 py-1.5 text-sm">Add your card</button>
-                </div>
-              </div>
 
               <div className="p-4 border-t border-gray-200 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -86,32 +67,27 @@ export default async function PaymentPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          <hr className="border-gray-200 my-6" />
+
+          {/* Section 3: Review items */}
+          <div className="mb-6">
+            <h3 className="text-lg md:text-xl font-bold text-[#e47911] mb-4">3  Review items and shipping</h3>
             
-            {/* Promo code */}
-            <div className="mt-6">
-              <label className="text-sm font-bold block mb-2">Gift cards & promotional codes</label>
-              <div className="flex gap-2">
-                <input type="text" placeholder="Enter code" className="border border-gray-300 rounded px-3 py-1.5 focus:border-[#e47911] outline-none shadow-sm  w-full max-w-50" />
-                <button className="bg-white hover:bg-gray-50 border border-gray-300 text-gray-500 shadow-sm rounded-lg px-4 py-1.5 text-sm">Apply</button>
+            {products.map((product)=><div key={product._id} className="mb-3 border border-gray-200 shadow-sm rounded p-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Image width={50} height={50} src={product.product.imageCover} alt={product.product.title} className="w-24 h-24 bg-gray-100 rounded-md "/>
+                  
+                <div className="flex flex-col">
+                  <h4 className="font-bold text-[#0f1111] text-sm md:text-base">{product.product.title}</h4>
+                  <p className="text-[#b12704] font-bold mt-1">{product.count * product.price}</p>
+                  <p className="text-sm text-gray-600 mt-1">Qty: {product.count}</p>
+                  <p className="text-xs text-[#007600] mt-1 font-semibold">In Stock</p>
+                  <p className="text-xs text-gray-500 mt-1">Sold by: Cartify Official</p>
+                </div>
               </div>
-            </div>
-
-            <div className="mt-6 p-4 bg-gray-50 rounded text-sm text-gray-600">
-              <Button className="bg-[#FFD814] hover:bg-[#F7CA00] text-black w-auto px-6 rounded-lg text-sm border border-[#FCD200]/50 mb-4 shadow-sm">
-                Use this payment method
-              </Button>
-              <p>You can review this order before it's final.</p>
-            </div>
-          </div>
-
-          <hr className="border-gray-200 my-4" />
-
-          {/* Section 3: Offers */}
-          <div className="mb-6">
-             <h3 className="text-lg md:text-xl font-bold text-gray-500 mb-2">3  Offers</h3>
-          </div>
-          <div className="mb-6">
-             <h3 className="text-lg md:text-xl font-bold text-gray-500 mb-2">4  Items and shipping</h3>
+            </div>)}
           </div>
 
         </div>
@@ -119,9 +95,7 @@ export default async function PaymentPage() {
         {/* Right Column (Order Summary) */}
         <div className="md:w-1/3">
           <div className="border border-gray-200 rounded p-4 bg-white sticky top-4 shadow-sm">
-            <Button className="w-full mb-2 bg-[#FFD814] hover:bg-[#F7CA00] text-[#0f1111] rounded-full border border-transparent whitespace-nowrap font-medium shadow-[0_2px_5px_rgba(213,217,217,0.5)]">
-               Place your order
-            </Button>
+            <CheckoutBtn cartId={cartId} token={token!} city={city} details={details} phone={phone}/>
             <p className="text-xs text-center text-gray-600 mb-4 px-2">By placing your order, you agree to Cartify's privacy notice and conditions of use.</p>
             
             <hr className="border-gray-200 my-4 -mx-4" />
@@ -129,24 +103,16 @@ export default async function PaymentPage() {
             <h3 className="font-bold text-lg mb-2">Order Summary</h3>
             <div className="text-sm space-y-1 mb-2 text-[#0f1111]">
               <div className="flex justify-between">
-                <span>Items ():</span>
-                <span>EGP </span>
+                <span>Subtotal</span>
+                <span>{totalCartPrice} EGP </span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping & handling:</span>
-                <span>EGP 0.00</span>
+                <span>EGP 50</span>
               </div>
               <div className="flex justify-between text-gray-500 italic">
                 <span>Free Shipping:</span>
-                <span>-EGP 0.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Total before tax:</span>
-                <span>EGP </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Estimated tax to be collected:</span>
-                <span>EGP 0.00</span>
+                <span>-EGP 50</span>
               </div>
             </div>
             
@@ -154,12 +120,9 @@ export default async function PaymentPage() {
             
             <div className="flex justify-between font-bold text-lg text-[#b12704]">
               <span>Order total:</span>
-              <span>EGP </span>
+              <span>{totalCartPrice} EGP </span>
             </div>
             
-            <div className="mt-4 bg-gray-50 p-2 text-xs rounded border border-gray-200">
-               <span className="text-amazon-blue hover:underline cursor-pointer">How are shipping costs calculated?</span>
-            </div>
 
           </div>
         </div>

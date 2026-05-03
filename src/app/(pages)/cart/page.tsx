@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 export default function CartPage() {
   const session = useSession();
   const token = session?.data?.user.token;
+console.log(token);
 
   const { cartData } = useSelector((state: RootState) => state.cartDataRed);
 
@@ -121,42 +122,51 @@ export default function CartPage() {
         {/* Checkout Summary Area */}
         {!isEmpty && (
           <div className="w-full lg:w-75 shrink-0">
-            
             <div className="bg-white p-5 rounded-sm shadow-sm relative">
-              <div className="flex items-center gap-2 mb-4 text-xs text-[#007600]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 fill-current shrink-0"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div className=" rounded-xl p-4 flex items-center gap-3">
-                 
-                  <div>
-                    <p className="font-semibold ">Free Shipping!</p>
-                    <p className="text-sm ">
-                      You qualify for free delivery
-                    </p>
-                  </div>
+              <h2 className="text-xl font-bold mb-1">Order Summary</h2>
+              <p className="text-sm text-gray-500 mb-6">{cartData?.numOfCartItems} Items in cart</p>
+
+              <div className="space-y-3 mb-6 border-b border-gray-200 pb-4">
+                <div className="flex justify-between text-[#0f1111]">
+                  <span>Subtotal</span>
+                  <span className="font-semibold">{`${cartData?.data.totalCartPrice} L.E`}</span>
+                </div>
+                <div className="flex justify-between text-[#0f1111]">
+                  <span>Shipping Fee</span>
+                  <span className="text-[#007600] font-semibold">Free</span>
                 </div>
               </div>
 
-              <div className="mb-4 text-lg text-[#0f1111]">
-                Subtotal ({cartData?.numOfCartItems}):{" "}
-                <span className="font-bold">{`${cartData?.data.totalCartPrice} L.E`}</span>
+              <div className="flex justify-between text-[#0f1111] text-lg font-extrabold mb-6">
+                <span>Total</span>
+                <span>{`${cartData?.data.totalCartPrice} L.E`}</span>
               </div>
 
               <Button
-                onClick={() => redirect("/payment")}
-                className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-[#0f1111] rounded-full border border-[#FCD200]/50 font-medium h-9"
+                variant="outline"
+                className="w-full mb-4 border-[#D5D9D9] hover:bg-gray-50 text-[#0f1111] rounded-full h-9"
               >
-                Proceed to checkout
+                Apply Promo Code
               </Button>
+
+              <Button
+                onClick={() => redirect("/payment")}
+                className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-[#0f1111] rounded-full border border-[#FCD200]/50 font-medium h-9 mb-4 flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Secure Checkout
+              </Button>
+
+              <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground mt-4">
+                <span className="flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                  Secure Payment
+                </span>
+                <span className="flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7h-3v7h3.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1v-4.158a1 1 0 00-.293-.707l-2.828-2.828A1 1 0 0016.172 7H14z" /></svg>
+                  Fast Delivery
+                </span>
+              </div>
             </div>
           </div>
         )}
