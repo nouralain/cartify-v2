@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { apiClient } from "@/lib/api-client";
 import WishlistButton from "@/components/wishlist/WishlistButton";
 import AddToCartBtn from "@/components/product/AddToCartBtn";
+import Link from "next/link";
 
 export default async function ProductDetailsPage({
   params,
@@ -12,6 +13,32 @@ export default async function ProductDetailsPage({
 }) {
   const { id } = await params;
   const product = await apiClient.getSpecificProduct(id);
+
+  if (!product.data) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] bg-white p-6 text-center">
+        <div className="mb-6 text-[#D5D9D9]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+            <path d="m3.3 7 8.7 5 8.7-5"/>
+            <path d="M12 22V12"/>
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-[#0f1111] mb-2">
+          No product available with ID: <span className="text-red-600 underline">{id}</span>
+        </h1>
+        <p className="text-gray-600 mb-8 max-w-md">
+          Sorry, we couldn't find the product you're looking for. It might have been removed, or the ID in the URL is incorrect.
+        </p>
+        <Link href="/products">
+          <Button className="bg-[#FFD814] hover:bg-[#F7CA00] text-[#0f1111] rounded-full border border-transparent font-medium px-10 shadow-sm h-10 transition-all active:scale-95">
+            Return to products
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
   const {
     _id,
     brand,
