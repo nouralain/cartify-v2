@@ -68,17 +68,36 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
             </Link>
 
             {/* Mobile Cart/User Icons */}
-            <div className="sm:hidden flex items-center gap-2">
+            <div className="sm:hidden flex items-center gap-4">
+              {session.status === "unauthenticated" ? (
+                <Link
+                  href="/auth/login"
+                  className="text-xs font-bold border border-transparent hover:border-white px-1 py-1 rounded-sm whitespace-nowrap"
+                >
+                  Sign In
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setOpenPoppers(!openPoppers)}
+                  className="text-xs font-bold border border-transparent hover:border-white px-1 py-1 rounded-sm whitespace-nowrap flex items-center gap-0.5"
+                >
+                  <MapPin className="h-4 w-4" />
+                  <span className="truncate max-w-[100px]">{userAddress}</span>
+                </button>
+              )}
               <Link
                 href="/cart"
-                className="flex items-center px-2 border border-transparent rounded-sm relative"
+                className="flex items-center px-1 border border-transparent rounded-sm relative"
               >
-                <span className="absolute -top-1 left-4 font-bold text-[#ff9900]">
-                  {loading?
-                <Spinner/>
-                :cartData?.numOfCartItems
-                }
-                </span>
+                {session.status === "authenticated" && (
+                  <span className="absolute -top-2 -right-1 font-bold text-[#ff9900] text-[10px] bg-amazon-dark px-1 rounded-full border border-[#ff9900]">
+                    {loading ? (
+                      <div className="scale-50 w-3 h-3"><Spinner /></div>
+                    ) : (
+                      cartData?.numOfCartItems || 0
+                    )}
+                  </span>
+                )}
                 <ShoppingCart className="h-6 w-6" />
               </Link>
             </div>
@@ -114,7 +133,12 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
               Account & Lists
             </span>
           </Link>:
-          <Button onClick={()=>signOut({callbackUrl:"/auth/login"})} className="px-2 border border-transparent hover:border-white rounded-sm cursor-pointer text-sm  font-bold leading-tight">Sign out</Button>
+          <Button 
+            onClick={() => signOut({ callbackUrl: "/auth/login" })} 
+            className="hidden md:block px-2 border border-transparent hover:border-white rounded-sm cursor-pointer text-sm font-bold leading-tight bg-transparent hover:bg-transparent shadow-none h-auto"
+          >
+            Sign out
+          </Button>
           }
 
           {/* Returns & Orders */}
@@ -129,12 +153,15 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
             className="hidden sm:flex items-center px-2 py-1 border border-transparent hover:border-white rounded-sm cursor-pointer relative"
           >
             <div className="relative">
-              <span className="absolute -top-2 left-3 font-bold text-[#ff9900]">
-                {loading?
-                <Spinner/>
-                :cartData?.numOfCartItems
-                }
-              </span>
+              {session.status === "authenticated" && (
+                <span className="absolute -top-2 left-3 font-bold text-[#ff9900]">
+                  {loading ? (
+                    <Spinner />
+                  ) : (
+                    cartData?.numOfCartItems || 0
+                  )}
+                </span>
+              )}
               <ShoppingCart className="h-8 w-8" />
             </div>
             <span className="text-sm font-bold mt-3 hidden md:block">Cart</span>
@@ -170,13 +197,13 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
          
           <Link
             href="/orders"
-            className="hover:border hover:border-white border border-transparent px-1 rounded-sm whitespace-nowrap py-1 hidden sm:block"
+            className="hover:border hover:border-white border border-transparent px-1 rounded-sm whitespace-nowrap py-1"
           >
             My Orders
           </Link>
           <Link
             href="/wishlist"
-            className="hover:border hover:border-white border border-transparent px-1 rounded-sm whitespace-nowrap py-1 hidden sm:block"
+            className="hover:border hover:border-white border border-transparent px-1 rounded-sm whitespace-nowrap py-1"
           >
             My Wishlist
           </Link>
@@ -186,6 +213,14 @@ export function Header({categories}:{categories:IResponse<ICategory[]>}) {
           >
             Register
           </Link> }
+          {session.status === "authenticated" && (
+            <button
+              onClick={() => signOut({ callbackUrl: "/auth/login" })}
+              className="hover:border hover:border-white border border-transparent px-1 rounded-sm whitespace-nowrap py-1 md:ml-auto"
+            >
+              Sign Out
+            </button>
+          )}
         </div>
       </header>
       {openPoppers && (

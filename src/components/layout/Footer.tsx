@@ -1,12 +1,16 @@
+"use client";
 import Link from "next/link";
 
 export function Footer() {
   return (
     <footer className="bg-amazon-dark text-white mt-auto">
       {/* Back to top feature */}
-      <a href="#top" className="block text-center bg-[#37475a] hover:bg-[#485769] py-4 text-sm transition-colors cursor-pointer text-white">
+      <div 
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="block text-center bg-[#37475a] hover:bg-[#485769] py-4 text-sm transition-colors cursor-pointer text-white"
+      >
         Back to top
-      </a>
+      </div>
 
       <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div>

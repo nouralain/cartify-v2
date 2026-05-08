@@ -1,5 +1,6 @@
 "use client"
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { apiClient } from '@/lib/api-client'
 import toast from 'react-hot-toast'
@@ -12,6 +13,7 @@ interface Props{
 }
 export default function CheckoutBtn({token,city,phone,details,cartId}:Props) {
 
+  const router = useRouter()
   const[loading,setLoading] = useState(false)
   async  function handleCheckout(){
     setLoading(true)
@@ -19,6 +21,7 @@ export default function CheckoutBtn({token,city,phone,details,cartId}:Props) {
         if(resp.message==="Order created"){
 setLoading(false)
 toast.success(resp.message)
+router.push('/orders')
         }
     }
   return (

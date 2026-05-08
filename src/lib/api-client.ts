@@ -9,6 +9,7 @@ import { ICartResponse } from "@/interfaces/ICartResponse";
 import { ICartData } from "@/interfaces/ICartData";
 import { IAddress } from "@/interfaces/IAddress";
 import { IOrderResponse } from "@/interfaces/orders/IOrderResponse";
+import { IOrderData } from "@/interfaces/orders/IOrderData";
 
 class ApiClient {
   #baseUrl: string = process.env.NEXT_PUBLIC_BASE_URL!;
@@ -247,6 +248,16 @@ class ApiClient {
       }),
       headers: {
         ...this.#headers,
+        token,
+      },
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async getUserOrders(userId: string , token:string): Promise<IOrderData[]> {
+    const response = await fetch(`${this.#baseUrl}/api/v1/orders/user/${userId}`, {
+      headers: {
         token,
       },
     });
